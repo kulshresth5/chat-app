@@ -6,33 +6,31 @@ import { BASE_URL } from '..';
 
 const useGetOtherUsers = () => {
     const dispatch = useDispatch();
-
-     const token = useSelector((state) => state.user?.token) || localStorage.getItem("token");
+    const token = useSelector((state) => state.user?.token); 
 
     useEffect(() => {
         const fetchOtherUsers = async () => {
             try {
-                 if (!token) {
-                    console.warn("⚠️ No token found. Skipping fetchOtherUsers");
-                    return;
-                }
-
+                axios.defaults.withCredentials = true;
                 const res = await axios.get(`${BASE_URL}/api/v1/user`, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    withCredentials: true,
+                        Authorization: `Bearer ${token}`, 
+                    }
                 });
 
-                console.log("other users -> ",res.data);
+                console.log("other users -> ", res.data);
                 dispatch(setOtherUsers(res.data));
             } catch (error) {
                 console.log(error);
             }
+        };
+
+        if (token) {
+            fetchOtherUsers();
+        } else {
+            console.warn("⚠️ No token found. Skipping fetchOtherUsers");
         }
-        fetchOtherUsers();
-    }, [token,dispatch])
+    }, [token, dispatch]); // 👈 re-run when token changes
+};
 
-}
-
-export default useGetOtherUsers
+export default useGetOtherUsers;
