@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 const corsOption={
     origin:'https://chat-app-1-ptr4.onrender.com',
+    methods:["GET","POST","PUT","DELETE"],
     credentials:true
 };
 app.use(cors(corsOption)); 
